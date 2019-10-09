@@ -27,5 +27,3 @@ choco install procexp
 choco install windirstat
 choco install speccy
 choco install gsmartcontrol
-choco install ccleaner
-

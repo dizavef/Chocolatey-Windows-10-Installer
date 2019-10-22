@@ -1,9 +1,9 @@
 @ECHO OFF
 CLS
 ECHO
-ECHO ********************************************************
-ECHO *         Awesome Computers Chocolatey Installer       *
-ECHO ******************************************************** 
+ECHO ------------------------
+ECHO | Chocolatey Installer |
+ECHO ------------------------ 
 SET /P M=To install Chocolaty type 1 then press ENTER:
 IF %M%==1 GOTO INSTALL
 
@@ -11,16 +11,12 @@ IF %M%==1 GOTO INSTALL
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 sleep 10
 
-choco install adobereader
-choco install googlechrome
+choco install brave
 choco install firefox
-choco install vlc
 choco install notepadplusplus.install
 choco install putty.install
 choco install 7zip
-choco install ccleaner
 choco install filezilla
-choco install adblockplusie
 choco install autoruns
 choco install winscp
 choco install procexp
@@ -28,4 +24,7 @@ choco install windirstat
 choco install speccy
 choco install gsmartcontrol
 choco install ccleaner
-
+choco install discord
+choco install comodo-remote
+choco install steam
+choco install em-client

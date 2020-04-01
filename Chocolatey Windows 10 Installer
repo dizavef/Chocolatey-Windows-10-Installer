@@ -1,19 +1,37 @@
-@ECHO OFF
-CLS
-ECHO
-ECHO ------------------------
-ECHO | Chocolatey Installer |
-ECHO ------------------------ 
-SET /P M=To install Chocolaty type 1 then press ENTER:
-IF %M%==1 GOTO INSTALL
+@echo off
 
-:INSTALL
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-sleep 10
+:: BatchGotAdmin
+:-------------------------------------
+REM  --> Check for permissions
+>nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
 
+REM --> If error flag set, we do not have admin.
+if '%errorlevel%' NEQ '0' (
+    echo Requesting administrative privileges...
+    goto UACPrompt
+) else ( goto gotAdmin )
+
+:UACPrompt
+    echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
+    set params = %*:"=""
+    echo UAC.ShellExecute "cmd.exe", "/c %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs"
+
+    "%temp%\getadmin.vbs"
+    del "%temp%\getadmin.vbs"
+    exit /B
+
+:gotAdmin
+    pushd "%CD%"
+    CD /D "%~dp0"
+:--------------------------------------
+
+:: Disable User Prompt
+:-------------------------------------
+choco feature enable -n=allowGlobalConfirmation
+
+:: Install packages
+:-------------------------------------
 choco install brave
-choco install firefox
-choco install notepadplusplus.install
 choco install putty.install
 choco install 7zip
 choco install filezilla
@@ -24,7 +42,6 @@ choco install windirstat
 choco install speccy
 choco install gsmartcontrol
 choco install ccleaner
-choco install discord
-choco install comodo-remote
-choco install steam
-choco install em-client
+choco install adobereader
+choco install cutepdf
+choco install openvpn

@@ -1,47 +1,32 @@
 @echo off
 
-:: BatchGotAdmin
-:-------------------------------------
-REM  --> Check for permissions
->nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-
-REM --> If error flag set, we do not have admin.
-if '%errorlevel%' NEQ '0' (
-    echo Requesting administrative privileges...
-    goto UACPrompt
-) else ( goto gotAdmin )
-
-:UACPrompt
-    echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
-    set params = %*:"=""
-    echo UAC.ShellExecute "cmd.exe", "/c %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs"
-
-    "%temp%\getadmin.vbs"
-    del "%temp%\getadmin.vbs"
-    exit /B
-
-:gotAdmin
-    pushd "%CD%"
-    CD /D "%~dp0"
-:--------------------------------------
-
+::REMOVE ONEDRIVE 
+taskkill /f /im OneDrive.exe
+%SystemRoot%\System32\OneDriveSetup.exe /uninstall
+%SystemRoot%\SysWOW64\OneDriveSetup.exe /uninstall
+rd "%UserProfile%\OneDrive" /Q /S
+rd "%LocalAppData%\Microsoft\OneDrive" /Q /S
+rd "%ProgramData%\Microsoft OneDrive" /Q /S
+rd "C:\OneDriveTemp" /Q /S
+::SET TIMEZONE
+tzutil.exe /s "Eastern Standard Time"
+::SET POWER TO HIGH PERFORMANCE
+powercfg -duplicatescheme 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+::TURN OFF SLEEP
+powercfg.exe /hibernate off
+::INSTALL CHOCOLATY
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 :: Disable User Prompt
-:-------------------------------------
 choco feature enable -n=allowGlobalConfirmation
-
 :: Install packages
-:-------------------------------------
-choco install brave
-choco install putty.install
 choco install 7zip
-choco install filezilla
 choco install autoruns
-choco install winscp
 choco install procexp
 choco install windirstat
 choco install speccy
 choco install gsmartcontrol
-choco install ccleaner
 choco install adobereader
 choco install cutepdf
-choco install openvpn
+choco install libreoffice-fresh
+choco install lenovo-thinkvantage-system-update
+choco install avirafreeantivirus
